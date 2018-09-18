@@ -18,6 +18,7 @@ import CoordinateAxes from './CoordinateAxes';
 import ToolHead from './ToolHead';
 import TargetPoint from './TargetPoint';
 import GridLine from './GridLine';
+import AutoLevel from './AutoLevel';
 import PivotPoint3 from './PivotPoint3';
 import TextSprite from './TextSprite';
 import GCodeVisualizer from './GCodeVisualizer';
@@ -87,6 +88,7 @@ class Visualizer extends Component {
         this.toolhead = null;
         this.targetPoint = null;
         this.visualizer = null;
+        this.autolevel = null;
     }
     componentDidMount() {
         this.subscribe();
@@ -235,6 +237,15 @@ class Visualizer extends Component {
         const tokens = [
             pubsub.subscribe('resize', (msg) => {
                 this.resizeRenderer();
+            }),
+            pubsub.subscribe('autolevel:init', (msg, config) => {
+                this.initAutoLevel(config);
+            }),
+            pubsub.subscribe('autolevel:finish', (msg) => {
+                this.finishAutoLevel();
+            }),
+            pubsub.subscribe('autolevel:point', (msg, point) => {
+                this.updateAutoLevel(point);
             })
         ];
         this.pubsubTokens = this.pubsubTokens.concat(tokens);
@@ -745,6 +756,19 @@ class Visualizer extends Component {
             this.controls.reset();
         }
         this.updateScene();
+    }
+    initAutoLevel(config) {
+        this.autolevel = new AutoLevel(config);
+    }
+    finishAutoLevel() {
+        this.autolevel.finish();
+        const obj = this.autolevel.getGeometry();
+        obj.name = 'AutoLevel';
+        this.group.add(obj);
+        this.updateScene();
+    }
+    updateAutoLevel(point) {
+        this.autolevel.update(point);
     }
     load(name, gcode, callback) {
         // Remove previous G-code object

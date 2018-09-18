@@ -105,6 +105,13 @@ class WidgetManager extends PureComponent {
             disabled: false
         },
         {
+            id: 'autolevel',
+            caption: i18n._('AutoLevel Widget'),
+            details: i18n._('This widget allows you to auto level.'),
+            visible: true,
+            disabled: false
+        },
+        {
             id: 'spindle',
             caption: i18n._('Spindle Widget'),
             details: i18n._('This widget provides the spindle control.'),

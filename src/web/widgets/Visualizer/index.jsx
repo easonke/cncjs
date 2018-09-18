@@ -219,6 +219,9 @@ class VisualizerWidget extends PureComponent {
                 }
             }));
 
+            if (this.visualizer && this.visualizer.autolevel) {
+                gcode = this.visualizer.autolevel.modifyGCode(gcode);
+            }
             controller.command('gcode:load', name, gcode, context, (err, data) => {
                 if (err) {
                     this.setState((state) => ({
