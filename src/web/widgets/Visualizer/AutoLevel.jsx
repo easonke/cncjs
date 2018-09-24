@@ -11,8 +11,8 @@ class AutoLevel {
     segments = [];
 
     constructor(config) {
-        config.ey = Math.floor((config.ey - config.sy) / config.dy) * config.dy;
-        config.ex = Math.floor((config.ex - config.sx) / config.dx) * config.dx;
+        config.ey = Math.floor((config.ey - config.sy) / config.dy) * config.dy + config.sy;
+        config.ex = Math.floor((config.ex - config.sx) / config.dx) * config.dx + config.sx;
         this.config = config;
         var x, y;
         for (y = config.sy; y <= config.ey; y += config.dy) {
@@ -73,6 +73,8 @@ class AutoLevel {
         if (target && target.length === 1) {
             target[0].z = point.z;
         } else {
+            console.log(this.points);
+            console.log(point);
             throw Error('Internal error finding point.');
         }
     }
@@ -96,6 +98,9 @@ class AutoLevel {
             if (p2.x === p.x && p2.y === p.y) {
                 return p2.z;
             } else {
+                console.log(p1);
+                console.log(p2);
+                console.log(p);
                 throw Error('Fail to get z of p');
             }
         }
@@ -132,6 +137,8 @@ class AutoLevel {
         if (xP1 !== null && xP2 !== null) {
             return p1.z + this.zOfLine(xP1, xP2, p1);
         }
+        console.log(p1);
+        console.log(this.segments);
         throw Error('Could not get z');
     }
     modifyGCode(gcode) {

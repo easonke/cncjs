@@ -351,6 +351,7 @@ class AutoLevelWidget extends PureComponent {
         this.state.currentPoint = null;
         controller.command('gcode', 'G91');
         controller.command('gcode', 'G0 Z' + this.state.retractionDistance);
+        controller.command('gcode', 'G90');
         pubsub.publish('autolevel:finish');
         console.log('END');
     }
