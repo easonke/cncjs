@@ -8,6 +8,9 @@ import WidgetConfig from '../WidgetConfig';
 import i18n from '../../lib/i18n';
 import Space from '../../components/Space';
 import styles from './index.styl';
+import {
+    METRIC_UNITS
+} from '../../constants';
 
 class AutoLevelWidget extends PureComponent {
     static propTypes = {
@@ -20,6 +23,17 @@ class AutoLevelWidget extends PureComponent {
     getInitialState() {
         return {
             minimized: this.config.get('minimized', false),
+            units: METRIC_UNITS,
+            sx: 0,
+            sy: 0,
+            dx: 0,
+            dy: 0,
+            ex: 0,
+            ey: 0,
+            probeDepth: 0,
+            probeFeedrate: 0,
+            touchPlateHeight: 0,
+            retractionDistance: 0,
             workPosition: { // Work position
                 x: '0.000',
                 y: '0.000',
@@ -37,6 +51,22 @@ class AutoLevelWidget extends PureComponent {
         const actions = {
             ...this.actions
         };
+        const {
+            units,
+            sx,
+            sy,
+            dx,
+            dy,
+            ex,
+            ey,
+            probeDepth,
+            probeFeedrate,
+            touchPlateHeight,
+            retractionDistance
+        } = this.state;
+        const displayUnits = (units === METRIC_UNITS) ? i18n._('mm') : i18n._('in');
+        const feedrateUnits = (units === METRIC_UNITS) ? i18n._('mm/min') : i18n._('in/min');
+        const step = (units === METRIC_UNITS) ? 1 : 0.1;
         return (
             <Widget>
                 <Widget.Header>
@@ -77,6 +107,178 @@ class AutoLevelWidget extends PureComponent {
                         { [styles.hidden]: minimized }
                     )}
                 >
+                    <div className="row no-gutters">
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Start X')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={sx}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleSXChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Start Y')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={sy}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleSYChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('End X')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={ex}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleEXChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('End Y')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={ey}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleEYChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Delta X')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={dx}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleDXChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Delta Y')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={dy}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleDYChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Probe Depth')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={probeDepth}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleProbeDepthChange}
+                                    />
+                                    <div className="input-group-addon">{displayUnits}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingLeft: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Probe Feedrate')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={probeFeedrate}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleProbeFeedrateChange}
+                                    />
+                                    <span className="input-group-addon">{feedrateUnits}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingRight: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Touch Plate Thickness')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={touchPlateHeight}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleTouchPlateHeightChange}
+                                    />
+                                    <span className="input-group-addon">{displayUnits}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-xs-6" style={{ paddingLeft: 5 }}>
+                            <div className="form-group">
+                                <label className="control-label">{i18n._('Retraction Distance')}</label>
+                                <div className="input-group input-group-sm">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        value={retractionDistance}
+                                        placeholder="0.00"
+                                        min={0}
+                                        step={step}
+                                        onChange={actions.handleRetractionDistanceChange}
+                                    />
+                                    <span className="input-group-addon">{displayUnits}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button
                         type="button"
                         className={classNames(
@@ -103,12 +305,12 @@ class AutoLevelWidget extends PureComponent {
             </Widget>);
     }
     initSurface() {
-        const sx = parseFloat(this.state.workPosition.x);
-        const sy = parseFloat(this.state.workPosition.y);
-        const dx = 14.0;
-        const dy = 14.0;
-        const ex = sx + dx * 1;
-        const ey = sy + dy * 1;
+        const sx = this.state.sx;
+        const sy = this.state.sy;
+        const dx = this.state.dx;
+        const dy = this.state.dy;
+        const ex = this.state.ex;
+        const ey = this.state.ey;
         pubsub.publish('autolevel:init', { sx, sy, dx, dy, ex, ey });
         var x = 0.0;
         var y = 0.0;
@@ -124,10 +326,12 @@ class AutoLevelWidget extends PureComponent {
         var point = this.state.points.shift();
         if (point) {
             this.state.currentPoint = point;
-            controller.command('gcode', 'G91');
-            controller.command('gcode', 'G38.2 Z-10 F60');
             controller.command('gcode', 'G90');
-            controller.command('gcode', 'G10 L20 P1 Z0');
+            controller.command('gcode', 'G0 X' + point.x + ' Y' + point.y);
+            controller.command('gcode', 'G91');
+            controller.command('gcode', 'G38.2 Z-' + this.state.probeDepth + ' F' + this.state.probeFeedrate);
+            controller.command('gcode', 'G90');
+            controller.command('gcode', 'G10 L20 P1 Z' + this.state.touchPlateHeight);
         }
     }
     nextPoint() {
@@ -136,19 +340,81 @@ class AutoLevelWidget extends PureComponent {
             console.log('New point at (' + point.x + ',' + point.y + ')');
             this.state.currentPoint = point;
             controller.command('gcode', 'G91');
-            controller.command('gcode', 'G0 Z10');
+            controller.command('gcode', 'G0 Z' + this.state.retractionDistance);
             controller.command('gcode', 'G90');
             controller.command('gcode', 'G0 X' + point.x + ' Y' + point.y);
             controller.command('gcode', 'G91');
-            controller.command('gcode', 'G38.2 Z-20 F60');
+            controller.command('gcode', 'G38.2 Z-' + this.state.probeDepth + ' F' + this.state.probeFeedrate);
             controller.command('gcode', 'G90');
             return;
         }
         this.state.currentPoint = null;
+        controller.command('gcode', 'G91');
+        controller.command('gcode', 'G0 Z' + this.state.retractionDistance);
         pubsub.publish('autolevel:finish');
         console.log('END');
     }
     actions = {
+        handleProbeDepthChange: (event) => {
+            const probeDepth = parseFloat(event.target.value);
+            this.setState({
+                probeDepth
+            });
+        },
+        handleProbeFeedrateChange: (event) => {
+            const probeFeedrate = parseFloat(event.target.value);
+            this.setState({
+                probeFeedrate
+            });
+        },
+        handleTouchPlateHeightChange: (event) => {
+            const touchPlateHeight = parseFloat(event.target.value);
+            this.setState({
+                touchPlateHeight
+            });
+        },
+        handleRetractionDistanceChange: (event) => {
+            const retractionDistance = parseFloat(event.target.value);
+            this.setState({
+                retractionDistance
+            });
+        },
+        handleEXChange: (event) => {
+            const ex = parseFloat(event.target.value);
+            this.setState({
+                ex
+            });
+        },
+        handleEYChange: (event) => {
+            const ey = parseFloat(event.target.value);
+            this.setState({
+                ey
+            });
+        },
+        handleDXChange: (event) => {
+            const dx = parseFloat(event.target.value);
+            this.setState({
+                dx
+            });
+        },
+        handleDYChange: (event) => {
+            const dy = parseFloat(event.target.value);
+            this.setState({
+                dy
+            });
+        },
+        handleSXChange: (event) => {
+            const sx = parseFloat(event.target.value);
+            this.setState({
+                sx
+            });
+        },
+        handleSYChange: (event) => {
+            const sy = parseFloat(event.target.value);
+            this.setState({
+                sy
+            });
+        },
         displaySurface: () => {
             this.initSurface();
             pubsub.publish('autolevel:point', { x: 0.0, y: 0.0, z: 0.0 });

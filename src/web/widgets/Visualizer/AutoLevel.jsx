@@ -11,6 +11,8 @@ class AutoLevel {
     segments = [];
 
     constructor(config) {
+        config.ey = Math.floor((config.ey - config.sy) / config.dy) * config.dy;
+        config.ex = Math.floor((config.ex - config.sx) / config.dx) * config.dx;
         this.config = config;
         var x, y;
         for (y = config.sy; y <= config.ey; y += config.dy) {

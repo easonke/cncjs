@@ -518,5 +518,11 @@
     "AutoLevel Widget": "AutoLevel Widget",
     "This widget allows you to auto level.": "This widget allows you to auto level.",
     "Leveling": "Leveling",
-    "Display": "Display"
+    "Display": "Display",
+    "Start X": "Start X",
+    "Start Y": "Start Y",
+    "End X": "End X",
+    "End Y": "End Y",
+    "Delta X": "Delta X",
+    "Delta Y": "Delta Y"
 }
